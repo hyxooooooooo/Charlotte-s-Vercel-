@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>ag7</title>
+  <style>
+    :root{--bg:#0f0b16;--card:#17121d;--accent:#c792ea;--muted:#b8a6c7}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    body{background:linear-gradient(180deg,#0b0710 0%, #121018 60%);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+    .wrap{width:min(560px,92%);background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:28px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+    h1{margin:0 0 8px 0;font-size:20px;color:#fff}
+    p{margin:0 0 18px 0;color:var(--muted)}
+    .input-row{display:flex;gap:8px}
+    input[type="password"]{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:#0e0b12;color:#fff;outline:none}
+    button{padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#8fd3ff);color:#10061a;font-weight:600;cursor:pointer}
+    .secret{margin-top:18px;padding:14px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));color:#dcd1ff;border:1px dashed rgba(255,255,255,0.03);display:none}
+    .hint{font-size:13px;color:#a99ac1;margin-top:10px}
+    .small{font-size:12px;color:#8d7fa3}
+    .footer{margin-top:16px;font-size:12px;color:#6f5f84}
+    a.link{color:var(--accent);text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <h1>ag7</h1>
+    <p>hey bastian!!!</p>
+
+    <div class="input-row" aria-live="polite">
+      <input id="pass" type="password" placeholder="enter passcode" aria-label="passcode">
+      <button id="go">unlock</button>
+    </div>
+
+    <div id="secret" class="secret" aria-hidden="true"></div>
+
+    <div class="footer small">made for <strong>hyxo!!!</strong>.</div>
+  </div>
+
+  <script>
+    const PASS = 'arianagrande'; 
+
+    const SECRET_B64 = 'SGV5IGFuZ2VsIGF1ZG8hIEFyaWFuYSBnem8gZWdnb25lIQoKVGhpcyBpcyB5b3VyIHNlY3JldC1wYWdlLiBJZiB5b3UndmUgc2hhcmVkIHRoaXMsIHN0b3JlIGl0IHluIG9mZiBzb21lIHBsYWNlIGluIHlvdXIgcmVwbw==';
+
+    const passInput = document.getElementById('pass');
+    const goBtn = document.getElementById('go');
+    const secretEl = document.getElementById('secret');
+
+    function decodeBase64(str){ try{ return atob(str); } catch(e){ return '— error decoding —'; } }
+
+    function showSecret(){
+      const decoded = decodeBase64(SECRET_B64).replace(/\n/g,'<br>');
+      secretEl.innerHTML = '<strong>Unlocked — secret content:</strong><br><div style="margin-top:8px;line-height:1.45;color:#e9deff;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)">' + decoded + '</div>';
+      secretEl.style.display = 'block';
+      secretEl.setAttribute('aria-hidden','false');
+      passInput.value = '';
+    }
+
+    function failFlash(){
+      passInput.style.borderColor = 'rgba(255,70,120,0.6)';
+      setTimeout(()=>passInput.style.borderColor='rgba(255,255,255,0.04)',600);
+    }
+
+    goBtn.addEventListener('click', ()=>{
+      const val = passInput.value || '';
+      if(val === PASS) showSecret(); else failFlash();
+    });
+
+    passInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') goBtn.click(); });
+
+    (function checkQuery(){
+      try{
+        const params = new URLSearchParams(location.search);
+        const k = params.get('k');
+        if(k && k === PASS) showSecret();
+      }catch(e){}
+    })();
+  </script>
+
+  <noscript>
+    <div style="padding:12px;margin:12px;border-radius:8px;background:#211827;color:#f0e9ff">This page requires JavaScript to unlock the secret.</div>
+  </noscript>
+</body>
+</html>
