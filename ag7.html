@@ -6,36 +6,31 @@
   <meta name="robots" content="noindex,nofollow">
   <title>ag7</title>
   <style>
-    :root{--bg:#0f0b16;--card:#17121d;--accent:#c792ea;--muted:#b8a6c7}
+    :root{--bg:#0f0b16;--accent:#c792ea;--muted:#b8a6c7}
     html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial}
-    body{background:linear-gradient(180deg,#0b0710 0%, #121018 60%);display:flex;align-items:center;justify-content:center;color:var(--muted)}
-    .wrap{width:min(560px,92%);background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:28px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
-    h1{margin:0 0 8px 0;font-size:20px;color:#fff}
-    p{margin:0 0 18px 0;color:var(--muted)}
-    .input-row{display:flex;gap:8px}
-    input[type="password"]{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:#0e0b12;color:#fff;outline:none}
+    body{background:linear-gradient(180deg,#0b0710 0%, #121018 60%);display:flex;justify-content:center;align-items:center;flex-direction:column;color:var(--muted)}
+    h1{margin:0 0 10px 0;font-size:1.8rem;font-family:"Brush Script MT",cursive;color:#fff}
+    p{margin:0 0 15px 0;font-size:1rem;color:var(--muted)}
+    .input-row{display:flex;gap:8px;margin-top:10px}
+    input[type="password"]{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:#0e0b12;color:#fff;outline:none}
     button{padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#8fd3ff);color:#10061a;font-weight:600;cursor:pointer}
-    .secret{margin-top:18px;padding:14px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));color:#dcd1ff;border:1px dashed rgba(255,255,255,0.03);display:none}
-    .hint{font-size:13px;color:#a99ac1;margin-top:10px}
-    .small{font-size:12px;color:#8d7fa3}
-    .footer{margin-top:16px;font-size:12px;color:#6f5f84}
-    a.link{color:var(--accent);text-decoration:none}
+    .secret{margin-top:18px;padding:14px;border-radius:8px;background:rgba(255,255,255,0.05);color:#dcd1ff;display:none}
+    .footer{margin-top:20px;font-size:0.85rem;color:#8d7fa3}
   </style>
 </head>
 <body>
-  <div class="wrap" role="main">
-    <h1>ag7</h1>
-    <p>hey bastian!!!</p>
+  <div class="emoji">🌙</div>
+  <h1>ag7</h1>
+  <p>hey!!!</p>
 
-    <div class="input-row" aria-live="polite">
-      <input id="pass" type="password" placeholder="enter passcode" aria-label="passcode">
-      <button id="go">unlock</button>
-    </div>
-
-    <div id="secret" class="secret" aria-hidden="true"></div>
-
-    <div class="footer small">made for <strong>hyxo!!!</strong>.</div>
+  <div class="input-row" aria-live="polite">
+    <input id="pass" type="password" placeholder="enter passcode" aria-label="passcode">
+    <button id="go">unlock</button>
   </div>
+
+  <div id="secret" class="secret" aria-hidden="true"></div>
+
+  <div class="footer">made by <strong>hyxo!!!</strong>.</div>
 
   <script>
     const PASS = 'arianagrande'; 
@@ -50,7 +45,7 @@
 
     function showSecret(){
       const decoded = decodeBase64(SECRET_B64).replace(/\n/g,'<br>');
-      secretEl.innerHTML = '<strong>Unlocked — secret content:</strong><br><div style="margin-top:8px;line-height:1.45;color:#e9deff;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)">' + decoded + '</div>';
+      secretEl.innerHTML = '<strong>Unlocked — secret content:</strong><br><div style="margin-top:8px;line-height:1.45;color:#e9deff;padding:10px;border-radius:8px;background:rgba(255,255,255,0.05)">' + decoded + '</div>';
       secretEl.style.display = 'block';
       secretEl.setAttribute('aria-hidden','false');
       passInput.value = '';
@@ -58,7 +53,7 @@
 
     function failFlash(){
       passInput.style.borderColor = 'rgba(255,70,120,0.6)';
-      setTimeout(()=>passInput.style.borderColor='rgba(255,255,255,0.04)',600);
+      setTimeout(()=>passInput.style.borderColor='rgba(255,255,255,0.1)',600);
     }
 
     goBtn.addEventListener('click', ()=>{
