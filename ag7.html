@@ -45,7 +45,7 @@
 
     function showSecret(){
       const decoded = decodeBase64(SECRET_B64).replace(/\n/g,'<br>');
-      secretEl.innerHTML = '<strong>Unlocked — secret content:</strong><br><div style="margin-top:8px;line-height:1.45;color:#e9deff;padding:10px;border-radius:8px;background:rgba(255,255,255,0.05)">' + decoded + '</div>';
+      secretEl.innerHTML = '<strong>omg!</strong><br><div style="margin-top:8px;line-height:1.45;color:#e9deff;padding:10px;border-radius:8px;background:rgba(255,255,255,0.05)">' + decoded + '</div>';
       secretEl.style.display = 'block';
       secretEl.setAttribute('aria-hidden','false');
       passInput.value = '';
