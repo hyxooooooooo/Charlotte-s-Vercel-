@@ -91,6 +91,8 @@
   </div>
 
   <script>
+    const CORS_PROXY = "https://cors-anywhere.herokuapp.com/"; // Public CORS proxy
+
     async function sendRequest() {
       const method = document.getElementById('method').value;
       let url = document.getElementById('url').value;
@@ -105,32 +107,45 @@
       let body = null;
 
       try {
-        if (headersInput) headers = JSON.parse(headersInput);
-        if (paramsInput) params = JSON.parse(paramsInput);
-        if (bodyInput && method !== 'GET') body = JSON.parse(bodyInput);
+        if (headersInput.trim()) headers = JSON.parse(headersInput);
+        if (paramsInput.trim()) params = JSON.parse(paramsInput);
+        if (bodyInput.trim() && method.toUpperCase() !== 'GET') body = JSON.parse(bodyInput);
       } catch (err) {
         responseBox.textContent = 'Error parsing JSON: ' + err;
         return;
       }
 
-      if (auth) headers['Authorization'] = 'Bearer ' + auth;
+      if (auth.trim()) headers['Authorization'] = 'Bearer ' + auth;
 
       const query = new URLSearchParams(params).toString();
       if (query) url += (url.includes('?') ? '&' : '?') + query;
 
+      // Prepend proxy
+      url = CORS_PROXY + url;
+
       try {
+        const start = performance.now();
         const res = await fetch(url, {
-          method,
-          headers,
+          method: method.toUpperCase(),
+          headers: Object.keys(headers).length ? headers : undefined,
           body: body ? JSON.stringify(body) : undefined
         });
+        const end = performance.now();
 
         const text = await res.text();
         let parsed;
         try { parsed = JSON.parse(text); }
         catch { parsed = text; }
 
-        responseBox.textContent = JSON.stringify(parsed, null, 2);
+        const debugInfo = {
+          status: res.status,
+          statusText: res.statusText,
+          timeMs: (end - start).toFixed(2),
+          headers: Object.fromEntries(res.headers.entries()),
+          body: parsed
+        };
+
+        responseBox.textContent = JSON.stringify(debugInfo, null, 2);
       } catch (err) {
         responseBox.textContent = 'Request failed: ' + err;
       }
