@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hyxo's workspace :)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { text-align: center; }
+    label { font-weight: bold; }
+    select, input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { background: #45a049; }
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>hyxoo api requests</h1>
+    
+    <label for="method">method:</label>
+    <select id="method">
+      <option>get</option>
+      <option>post</option>
+      <option>patch</option>
+      <option>put</option>
+      <option>delete</option>
+    </select>
+
+    <label for="url">url:</label>
+    <input type="text" id="url" placeholder="https://example.com/">
+
+    <div class="grid">
+      <div>
+        <label for="headers">headers:</label>
+        <textarea id="headers" rows="6" placeholder='{"Content-Type":"application/json"}'></textarea>
+      </div>
+      <div>
+        <label for="params">params:</label>
+        <textarea id="params" rows="6" placeholder='{"key":"value"}'></textarea>
+      </div>
+    </div>
+
+    <label for="auth">auth:</label>
+    <input type="text" id="auth" placeholder="eyJhbGciOi...">
+
+    <label for="body">request body:</label>
+    <textarea id="body" rows="8" placeholder='{"data":"example"}'></textarea>
+
+    <button onclick="sendRequest()">send</button>
+
+    <h2>response</h2>
+    <pre id="response">(waiting for request...)</pre>
+  </div>
+
+  <script>
+    async function sendRequest() {
+      const method = document.getElementById('method').value;
+      let url = document.getElementById('url').value;
+      const headersInput = document.getElementById('headers').value;
+      const paramsInput = document.getElementById('params').value;
+      const auth = document.getElementById('auth').value;
+      const bodyInput = document.getElementById('body').value;
+      const responseBox = document.getElementById('response');
+
+      let headers = {};
+      let params = {};
+      let body = null;
+
+      try {
+        if (headersInput) headers = JSON.parse(headersInput);
+        if (paramsInput) params = JSON.parse(paramsInput);
+        if (bodyInput && method !== 'GET') body = JSON.parse(bodyInput);
+      } catch (err) {
+        responseBox.textContent = 'Error parsing JSON: ' + err;
+        return;
+      }
+
+      if (auth) headers['Authorization'] = 'Bearer ' + auth;
+
+      const query = new URLSearchParams(params).toString();
+      if (query) url += (url.includes('?') ? '&' : '?') + query;
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers,
+          body: body ? JSON.stringify(body) : undefined
+        });
+
+        const text = await res.text();
+        let parsed;
+        try { parsed = JSON.parse(text); }
+        catch { parsed = text; }
+
+        responseBox.textContent = JSON.stringify(parsed, null, 2);
+      } catch (err) {
+        responseBox.textContent = 'Request failed: ' + err;
+      }
+    }
+  </script>
+</body>
+</html>
